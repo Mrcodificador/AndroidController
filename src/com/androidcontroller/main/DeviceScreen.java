@@ -1,7 +1,5 @@
 
 /*
- Copyright (C) 2014  Mr Codificador
-
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
@@ -15,11 +13,11 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.androidcontroller.main;
 
 import com.android.chimpchat.adb.AdbBackend;
 import com.android.chimpchat.core.IChimpDevice;
+import com.android.chimpchat.core.PhysicalButton;
 import com.android.chimpchat.core.TouchPressType;
 import com.androidcontroller.events.KeyConverter;
 import java.awt.Dimension;
@@ -27,33 +25,33 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.io.File;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 
 public class DeviceScreen extends javax.swing.JFrame {
 
     /**
      * Creates new form DeviceScreen
      */
-    double scaleRatio;
-    Image img;
-    Timer t;
+    private Image img;
+    private final Timer timer;
     IChimpDevice device;
-    DeviceScreen Obj;
     AdbBackend adb;
+    private final int INITIALDELAY = 200;
+    private final int INTERVAL = 5;
+    double scaleRatio;
 
     public DeviceScreen() {
         initComponents();
-        Obj = this;
         scaleRatio = 1;
-        t = new Timer();
-
+        timer = new Timer();
         //adb = new AdbBackend("adb path", false);
         adb = new AdbBackend();
-
         device = adb.waitForConnection(5000, ".*");
         fetchImages();
         pnlImage.setFocusable(true);
@@ -80,6 +78,19 @@ public class DeviceScreen extends javax.swing.JFrame {
             }
         }
         ;
+        toolBar = new javax.swing.JToolBar();
+        backButton = new javax.swing.JButton();
+        dummy1Button = new javax.swing.JButton();
+        homeButton = new javax.swing.JButton();
+        dummy2Button = new javax.swing.JButton();
+        menuButton = new javax.swing.JButton();
+        dummy3Button = new javax.swing.JButton();
+        plusButton = new javax.swing.JButton();
+        dummy4Button = new javax.swing.JButton();
+        minusButton = new javax.swing.JButton();
+        dummy5Button = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        lblStatus = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -122,18 +133,139 @@ public class DeviceScreen extends javax.swing.JFrame {
         );
         pnlImageLayout.setVerticalGroup(
             pnlImageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 360, Short.MAX_VALUE)
+            .addGap(0, 318, Short.MAX_VALUE)
         );
+
+        toolBar.setBorder(null);
+        toolBar.setFloatable(false);
+        toolBar.setRollover(true);
+
+        backButton.setFont(new java.awt.Font("Segoe UI Semibold", 0, 11)); // NOI18N
+        backButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/androidcontroller/images/back.png"))); // NOI18N
+        backButton.setToolTipText("Back");
+        backButton.setFocusable(false);
+        backButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        backButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        backButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backButtonActionPerformed(evt);
+            }
+        });
+        toolBar.add(backButton);
+
+        dummy1Button.setEnabled(false);
+        dummy1Button.setFocusable(false);
+        dummy1Button.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        dummy1Button.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        toolBar.add(dummy1Button);
+
+        homeButton.setFont(new java.awt.Font("Segoe UI Semibold", 0, 11)); // NOI18N
+        homeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/androidcontroller/images/home.png"))); // NOI18N
+        homeButton.setToolTipText("Home");
+        homeButton.setFocusable(false);
+        homeButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        homeButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        homeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                homeButtonActionPerformed(evt);
+            }
+        });
+        toolBar.add(homeButton);
+
+        dummy2Button.setEnabled(false);
+        dummy2Button.setFocusable(false);
+        dummy2Button.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        dummy2Button.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        toolBar.add(dummy2Button);
+
+        menuButton.setFont(new java.awt.Font("Segoe UI Semibold", 0, 11)); // NOI18N
+        menuButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/androidcontroller/images/menu.png"))); // NOI18N
+        menuButton.setToolTipText("Menu");
+        menuButton.setFocusable(false);
+        menuButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        menuButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        menuButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuButtonActionPerformed(evt);
+            }
+        });
+        toolBar.add(menuButton);
+
+        dummy3Button.setEnabled(false);
+        dummy3Button.setFocusable(false);
+        dummy3Button.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        dummy3Button.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        toolBar.add(dummy3Button);
+
+        plusButton.setFont(new java.awt.Font("Segoe UI Semibold", 0, 11)); // NOI18N
+        plusButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/androidcontroller/images/plus.png"))); // NOI18N
+        plusButton.setToolTipText("Zoom In");
+        plusButton.setFocusable(false);
+        plusButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        plusButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        plusButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                plusButtonActionPerformed(evt);
+            }
+        });
+        toolBar.add(plusButton);
+
+        dummy4Button.setEnabled(false);
+        dummy4Button.setFocusable(false);
+        dummy4Button.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        dummy4Button.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        toolBar.add(dummy4Button);
+
+        minusButton.setFont(new java.awt.Font("Segoe UI Semibold", 1, 11)); // NOI18N
+        minusButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/androidcontroller/images/minus.png"))); // NOI18N
+        minusButton.setToolTipText("Zoom Out");
+        minusButton.setFocusable(false);
+        minusButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        minusButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        minusButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                minusButtonActionPerformed(evt);
+            }
+        });
+        toolBar.add(minusButton);
+
+        dummy5Button.setFocusable(false);
+        dummy5Button.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        dummy5Button.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        toolBar.add(dummy5Button);
+
+        jButton1.setFont(new java.awt.Font("Segoe UI Semibold", 0, 11)); // NOI18N
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/androidcontroller/images/install.png"))); // NOI18N
+        jButton1.setToolTipText("Install");
+        jButton1.setFocusable(false);
+        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        toolBar.add(jButton1);
+
+        lblStatus.setMaximumSize(new java.awt.Dimension(50, 14));
+        lblStatus.setMinimumSize(new java.awt.Dimension(50, 14));
+        lblStatus.setPreferredSize(new java.awt.Dimension(50, 14));
+        toolBar.add(lblStatus);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(pnlImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(toolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnlImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(pnlImage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
@@ -156,16 +288,13 @@ public class DeviceScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_pnlImageMouseReleased
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-
         adb.shutdown();
         device = null;
-        Obj.dispose();
-
+        dispose();
     }//GEN-LAST:event_formWindowClosing
 
     private void pnlImageKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_pnlImageKeyTyped
         try {
-            System.out.println("I am here ");
             device.getManager().type(evt.getKeyChar());
         } catch (IOException ex) {
             Logger.getLogger(DeviceScreen.class.getName()).log(Level.SEVERE, null, ex);
@@ -190,6 +319,61 @@ public class DeviceScreen extends javax.swing.JFrame {
             Logger.getLogger(DeviceScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_pnlImageKeyPressed
+
+    private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
+        device.press(PhysicalButton.BACK, TouchPressType.DOWN_AND_UP);
+    }//GEN-LAST:event_backButtonActionPerformed
+
+    private void homeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeButtonActionPerformed
+        device.press(PhysicalButton.HOME, TouchPressType.DOWN_AND_UP);
+    }//GEN-LAST:event_homeButtonActionPerformed
+
+    private void menuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuButtonActionPerformed
+        device.press(PhysicalButton.MENU, TouchPressType.DOWN_AND_UP);
+    }//GEN-LAST:event_menuButtonActionPerformed
+
+    private void plusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plusButtonActionPerformed
+        scaleRatio = scaleRatio + 0.1;
+        reSize();
+    }//GEN-LAST:event_plusButtonActionPerformed
+
+    private void minusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minusButtonActionPerformed
+        scaleRatio = scaleRatio - 0.1;
+        reSize();
+    }//GEN-LAST:event_minusButtonActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileFilter(new Filefilter(".apk", "APK Files"));
+
+        chooser.setAcceptAllFileFilterUsed(false);
+        chooser.showOpenDialog(null);
+        File file = chooser.getSelectedFile();
+        if (file != null) {
+            device.installPackage(file.getAbsolutePath());
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    class Filefilter extends javax.swing.filechooser.FileFilter {
+
+        String strExtension;
+        String strDescription;
+
+        private Filefilter(String extension, String description) {
+            this.strDescription = description;
+            this.strExtension = extension;
+        }
+
+        @Override
+        public boolean accept(File f) {
+            return f.isDirectory() || f.getName().toLowerCase().endsWith(strExtension);
+        }
+
+        @Override
+        public String getDescription() {
+            return strDescription;
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -220,6 +404,7 @@ public class DeviceScreen extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new DeviceScreen().setVisible(true);
             }
@@ -227,19 +412,37 @@ public class DeviceScreen extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton backButton;
+    private javax.swing.JButton dummy1Button;
+    private javax.swing.JButton dummy2Button;
+    private javax.swing.JButton dummy3Button;
+    private javax.swing.JButton dummy4Button;
+    private javax.swing.JButton dummy5Button;
+    private javax.swing.JButton homeButton;
+    private javax.swing.JButton jButton1;
+    public javax.swing.JLabel lblStatus;
+    private javax.swing.JButton menuButton;
+    private javax.swing.JButton minusButton;
+    private javax.swing.JButton plusButton;
     private javax.swing.JPanel pnlImage;
+    private javax.swing.JToolBar toolBar;
     // End of variables declaration//GEN-END:variables
 
     private void fetchImages() {
-        t.schedule(new TimerTask() {
+        timer.schedule(new TimerTask() {
 
             @Override
             public void run() {
                 img = device.takeSnapshot().createBufferedImage();
-                pnlImage.setPreferredSize(new Dimension((int) (img.getWidth(null) * scaleRatio), (int) (img.getHeight(null) * scaleRatio)));
-                pnlImage.repaint();
-                Obj.setSize(((int) (img.getWidth(null) * scaleRatio) + 23), ((int) (img.getHeight(null) * scaleRatio) + 68));
+                reSize();
             }
-        }, 200, 5);
+        }, INITIALDELAY, INTERVAL);
     }
+
+    private void reSize() {
+        pnlImage.setPreferredSize(new Dimension((int) (img.getWidth(null) * scaleRatio), (int) (img.getHeight(null) * scaleRatio)));
+        pnlImage.repaint();
+        this.setSize(((int) (img.getWidth(null) * scaleRatio) + 23), ((int) (img.getHeight(null) * scaleRatio) + 68));
+    }
+
 }
