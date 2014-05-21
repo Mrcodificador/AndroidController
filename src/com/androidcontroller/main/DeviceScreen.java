@@ -32,6 +32,7 @@ import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 public class DeviceScreen extends javax.swing.JFrame {
 
@@ -45,14 +46,15 @@ public class DeviceScreen extends javax.swing.JFrame {
     private final int INITIALDELAY = 200;
     private final int INTERVAL = 5;
     double scaleRatio;
+    private static String strDeviceID;
 
-    public DeviceScreen() {
+    public DeviceScreen(String strDevive) {
         initComponents();
         scaleRatio = 1;
         timer = new Timer();
         //adb = new AdbBackend("adb path", false);
         adb = new AdbBackend();
-        device = adb.waitForConnection(5000, ".*");
+        device = adb.waitForConnection(5000, strDevive);
         fetchImages();
         pnlImage.setFocusable(true);
     }
@@ -403,10 +405,19 @@ public class DeviceScreen extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
+        if (args.length == 0) {
+            strDeviceID = ".*";
+        } else if (args.length == 1) {
+            strDeviceID = args[0];
+        } else {
+            JOptionPane.showMessageDialog(null, "Invalid parameters.\n"
+                    + "Usage : java -jar AndroidController <device ID>");
+        }
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new DeviceScreen().setVisible(true);
+                new DeviceScreen(strDeviceID).setVisible(true);
             }
         });
     }
