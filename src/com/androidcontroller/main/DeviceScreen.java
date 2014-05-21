@@ -50,6 +50,7 @@ public class DeviceScreen extends javax.swing.JFrame {
 
     public DeviceScreen(String strDevive) {
         initComponents();
+        setTitle("Android Controller");
         scaleRatio = 1;
         timer = new Timer();
         //adb = new AdbBackend("adb path", false);
@@ -91,7 +92,7 @@ public class DeviceScreen extends javax.swing.JFrame {
         dummy4Button = new javax.swing.JButton();
         minusButton = new javax.swing.JButton();
         dummy5Button = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btnInstall = new javax.swing.JButton();
         lblStatus = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -236,18 +237,18 @@ public class DeviceScreen extends javax.swing.JFrame {
         dummy5Button.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         toolBar.add(dummy5Button);
 
-        jButton1.setFont(new java.awt.Font("Segoe UI Semibold", 0, 11)); // NOI18N
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/androidcontroller/images/install.png"))); // NOI18N
-        jButton1.setToolTipText("Install");
-        jButton1.setFocusable(false);
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnInstall.setFont(new java.awt.Font("Segoe UI Semibold", 0, 11)); // NOI18N
+        btnInstall.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/androidcontroller/images/install.png"))); // NOI18N
+        btnInstall.setToolTipText("Install");
+        btnInstall.setFocusable(false);
+        btnInstall.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnInstall.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnInstall.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnInstallActionPerformed(evt);
             }
         });
-        toolBar.add(jButton1);
+        toolBar.add(btnInstall);
 
         lblStatus.setMaximumSize(new java.awt.Dimension(50, 14));
         lblStatus.setMinimumSize(new java.awt.Dimension(50, 14));
@@ -344,7 +345,7 @@ public class DeviceScreen extends javax.swing.JFrame {
         reSize();
     }//GEN-LAST:event_minusButtonActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnInstallActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInstallActionPerformed
         JFileChooser chooser = new JFileChooser();
         chooser.setFileFilter(new Filefilter(".apk", "APK Files"));
 
@@ -354,7 +355,7 @@ public class DeviceScreen extends javax.swing.JFrame {
         if (file != null) {
             device.installPackage(file.getAbsolutePath());
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnInstallActionPerformed
 
     class Filefilter extends javax.swing.filechooser.FileFilter {
 
@@ -424,13 +425,13 @@ public class DeviceScreen extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
+    private javax.swing.JButton btnInstall;
     private javax.swing.JButton dummy1Button;
     private javax.swing.JButton dummy2Button;
     private javax.swing.JButton dummy3Button;
     private javax.swing.JButton dummy4Button;
     private javax.swing.JButton dummy5Button;
     private javax.swing.JButton homeButton;
-    private javax.swing.JButton jButton1;
     public javax.swing.JLabel lblStatus;
     private javax.swing.JButton menuButton;
     private javax.swing.JButton minusButton;
